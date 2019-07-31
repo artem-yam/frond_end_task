@@ -10,9 +10,9 @@ var BooksController = (function (BooksStore, Utils, NotificationsStore, Book) {
         var search = window.document.querySelector("#search").value.toLowerCase();
         var result = [];
         var activeCategory = window.document.getElementsByClassName("activeCategory");
-        if (document.getElementById("most_popular") == activeCategory[0] ){
+        if (document.getElementById("most_popular") == activeCategory[0]) {
             result = BooksController.mostPopular();
-        } else{
+        } else {
             result = BooksStore;
         }
         for (var i = 0; i < result.length; i++) {
@@ -39,35 +39,35 @@ var BooksController = (function (BooksStore, Utils, NotificationsStore, Book) {
 
     //Изменение рейтинга
     function updateRating() {
-         for(i=0;i<BooksStore.length;i++){
-            var j=5;
+        for (var i = 0; i < BooksStore.length; i++) {
+            var j = 5;
             var book = BooksStore[i];
-            while (j>0){
-                var star = window.document.getElementById("star"+(10*(i+1)+j));
+            while (j > 0) {
+                var star = window.document.getElementById("star" + (10 * (i + 1) + j));
                 if (star.hasAttribute("checked")) {
                     if (book["stars"] != j) {
                         alert("Nw rating " + j);
                         //book["stars"] = j;
                     }
-                    j=0;
+                    j = 0;
                 }
                 j--;
-            }    
-        } 
+            }
+        }
         BooksView.allBooks();
     }
 
- /*   function updateRating(rating, id) {
-        id--;
-        if (BooksStore[id].stars != rating) {
-            BooksStore[id].stars = rating;
-            var historyId = BooksStore.length + 1;
-            NotificationsController.addNotification("You rate  <b>" +
-                BooksStore[id].title + "</b> by <b>" +
-                BooksStore[id].author + "</b> " + rating + " stars");
-            BooksView.allBooks();
-        }
-    }*/
+    /*   function updateRating(rating, id) {
+           id--;
+           if (BooksStore[id].stars != rating) {
+               BooksStore[id].stars = rating;
+               var historyId = BooksStore.length + 1;
+               NotificationsController.addNotification("You rate  <b>" +
+                   BooksStore[id].title + "</b> by <b>" +
+                   BooksStore[id].author + "</b> " + rating + " stars");
+               BooksView.allBooks();
+           }
+       }*/
 
     //Только популярные
     function mostPopular() {
@@ -105,25 +105,25 @@ var BooksController = (function (BooksStore, Utils, NotificationsStore, Book) {
         if (!(Utils.isBlank(title) && Utils.isBlank(author))) {
             alert("Fill \"Title\" and \"Author\" fields to add a new book");
         } else {
-        var bookId = BooksStore.length + 1;
-        var historyId = NotificationsStore.length + 1;
-        
-        var newBook = new Book(bookId, title, author, bookImage);
-        BooksStore.push(newBook);
+            var bookId = BooksStore.length + 1;
+            var historyId = NotificationsStore.length + 1;
 
-        NotificationsController.addNotification("You added <b>" +
+            var newBook = new Book(bookId, title, author, bookImage);
+            BooksStore.push(newBook);
+
+            NotificationsController.addNotification("You added <b>" +
                 title + "</b> by <b>" + author + "</b> to your <b>Library</b>");
-        alert("Book \"" + author + " - " + title + "\" has been added!");
-        window.document.querySelector("#add_image_label").style = "";
-        window.document.querySelector("#loaded_image").style = "";
-        window.document.querySelector("#add_book_title").value = "";
-        window.document.querySelector("#add_book_author").value = "";
-        var activeCategory = window.document.getElementsByClassName("activeCategory");
-        if (document.getElementById("all_books") == activeCategory[0]) {
-            BooksView.allBooks();
+            alert("Book \"" + author + " - " + title + "\" has been added!");
+            window.document.querySelector("#add_image_label").style = "";
+            window.document.querySelector("#loaded_image").style = "";
+            window.document.querySelector("#add_book_title").value = "";
+            window.document.querySelector("#add_book_author").value = "";
+            var activeCategory = window.document.getElementsByClassName("activeCategory");
+            if (document.getElementById("all_books") == activeCategory[0]) {
+                BooksView.allBooks();
             }
         }
-        
+
         return true;
     }
 
@@ -134,4 +134,4 @@ var BooksController = (function (BooksStore, Utils, NotificationsStore, Book) {
         search: search,
         mostPopular: mostPopular
     };
-} (BooksStore, Utils, NotificationsStore, Book));
+}(BooksStore, Utils, NotificationsStore, Book));

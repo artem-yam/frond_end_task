@@ -11,22 +11,22 @@ var NotificationView = (function (NotificationsController, NotificationsStore) {
         var minutes = date.minutes;
         var timeHistory = NotificationsController.generateTime(day, month, year, hour, minutes);
 
-        var code = "<div class=\"history_log\">" + 
-            "<div class=\"history_pic\"></div>" + 
+        var code = "<div class=\"history_log\">" +
+            "<div class=\"history_pic\"></div>" +
             "<div class=\"history_text\">" + text +
-            "<p><span>" + timeHistory + 
+            "<p><span>" + timeHistory +
             " ago</span></div></div>";
         history.innerHTML = code + history.innerHTML;
     }
 
-     //Загружаем историю
+    //Загружаем историю
     function loadHistory() {
         window.document.querySelector(".history_block").innerHTML = "";
         var i = 0;
         if (NotificationsStore.length > 5) {
             i = NotificationsStore.length - 5;
         }
-        while (i<NotificationsStore.length) {
+        while (i < NotificationsStore.length) {
             var msg = NotificationsStore[i];
             createBlock(
                 msg["id"],
@@ -42,4 +42,4 @@ var NotificationView = (function (NotificationsController, NotificationsStore) {
         loadHistory: loadHistory
     };
 
-} (NotificationsController, NotificationsStore));
+}(NotificationsController, NotificationsStore));

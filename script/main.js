@@ -9,12 +9,12 @@ var Main = (function (Utils, BooksView, NotificationView, BooksController) {
         //Перезагружаем библиотеку и историю
         BooksView.allBooks();
         NotificationView.loadHistory();
-     }
+    }
 
     //Начало
-    window.document.addEventListener("load",pageLoad());
+    window.document.addEventListener("load", pageLoad());
 
     return {
         pageLoad: pageLoad
     };
-} (Utils, BooksView, NotificationView, BooksController));
+}(Utils, BooksView, NotificationView, BooksController));
