@@ -1,4 +1,4 @@
-let NotificationsController = (function (model) {
+let notificationsController = (function (model) {
     "use strict";
 
     function getFlowedTime(date) {
@@ -13,4 +13,4 @@ let NotificationsController = (function (model) {
         addNotification,
         getFlowedTime
     };
-}(NotificationsModel));
+}(notificationsModel));

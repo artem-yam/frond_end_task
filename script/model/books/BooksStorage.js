@@ -1,4 +1,4 @@
-let BooksStorage = (function (book) {
+let booksStorage = (function (book) {
     "use strict";
 
     return [
@@ -13,4 +13,4 @@ let BooksStorage = (function (book) {
         new book(9, "Jamie's Italy", "Jamie Oliver", "JamiesItaly.jpg", 5),
         new book(10, "Vegetables Cookbook", "Matthew Biggs", "VegetablesCookbook.jpg", 3)
     ];
-}(Book));
+}(book));

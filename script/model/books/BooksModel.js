@@ -1,4 +1,4 @@
-let BooksModel = (function (book, storage) {
+let booksModel = (function (book, storage) {
 
     function search(text, category) {
         let result = [];
@@ -10,8 +10,8 @@ let BooksModel = (function (book, storage) {
         }
         for (let i = 0; i < booksToSearch.length; i++) {
             let book = booksToSearch[i];
-            let titleSearch = book["title"].toLowerCase().indexOf(text);
-            let authorSearch = book["author"].toLowerCase().indexOf(text);
+            let titleSearch = book.title.toLowerCase().indexOf(text);
+            let authorSearch = book.author.toLowerCase().indexOf(text);
             if (titleSearch !== -1 || authorSearch !== -1) {
                 result.push(book);
             }
@@ -41,13 +41,8 @@ let BooksModel = (function (book, storage) {
     }
 
     function updateRating(bookId, newRating) {
-        let bookToUpdate;
+        let bookToUpdate = findBook(bookId);
 
-        for (let i = 0; i < storage.length, bookToUpdate === undefined; i++) {
-            if (storage[i].id === bookId) {
-                bookToUpdate = storage[i];
-            }
-        }
         bookToUpdate.rating = newRating;
 
         return bookToUpdate;
@@ -57,7 +52,7 @@ let BooksModel = (function (book, storage) {
         bookImage = bookImage.substring(12);
 
         let bookId = storage.length + 1;
-        let newBook = new Book(bookId, title, author, bookImage);
+        let newBook = new book(bookId, title, author, bookImage);
 
         storage.push(newBook);
     }
@@ -90,4 +85,4 @@ let BooksModel = (function (book, storage) {
         getMostPopular,
         storage
     }
-})(Book, BooksStorage);
+})(book, booksStorage);

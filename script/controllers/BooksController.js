@@ -1,4 +1,4 @@
-let BooksController = (function (model) {
+let booksController = (function (model) {
     "use strict";
 
     function search(text, category) {
@@ -26,4 +26,4 @@ let BooksController = (function (model) {
         search,
         addBookTag
     };
-}(BooksModel));
+}(booksModel));

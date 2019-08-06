@@ -1,4 +1,4 @@
-let NotificationsModel = (function (notification, storage) {
+let notificationsModel = (function (notification, storage) {
 
     function getFlowedTime(date) {
         let diffYear = new Date().getFullYear() - date.getFullYear();
@@ -40,4 +40,4 @@ let NotificationsModel = (function (notification, storage) {
         addNotification,
         storage
     }
-})(Notification, NotificationsStorage);
+})(notification, notificationsStorage);

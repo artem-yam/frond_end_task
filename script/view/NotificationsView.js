@@ -1,4 +1,4 @@
-let NotificationsView = (function (controller, model) {
+let notificationsView = (function (controller, model) {
     "use strict";
 
     function createHistoryBarBlock(notification) {
@@ -80,4 +80,4 @@ let NotificationsView = (function (controller, model) {
         loadHistoryPage,
         addNotification
     };
-}(NotificationsController, NotificationsModel));
+}(notificationsController, notificationsModel));

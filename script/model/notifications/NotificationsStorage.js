@@ -1,4 +1,4 @@
-let NotificationsStorage = (function (notification) {
+let notificationsStorage = (function (notification) {
     "use strict";
 
     return [
@@ -7,4 +7,4 @@ let NotificationsStorage = (function (notification) {
         new notification(2, "You added <b>The Trial</b> by <b>Franz Kafka</b> to your " +
             "<b>Must Read Titles</b>", new Date(2019, 0, 1)),
     ];
-}(Notification));
+}(notification));

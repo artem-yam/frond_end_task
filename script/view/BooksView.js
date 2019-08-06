@@ -1,4 +1,4 @@
-let BooksView = (function (controller, model, notificationsView) {
+let booksView = (function (controller, model, notificationsView) {
     "use strict";
 
     function createBlock(book) {
@@ -11,7 +11,7 @@ let BooksView = (function (controller, model, notificationsView) {
         for (let i = 5; i > 0; i--) {
             bookCode += "<input id=\"star" + (book.id * 10 + i) +
                 "\" type=\"radio\" name=\"rating_stars" + book.id +
-                "\" onchange=\"BooksView.updateRating(" + book.id + "," + i + ")\"/>" +
+                "\" onchange=\"booksView.updateRating(" + book.id + "," + i + ")\"/>" +
                 "<label class=\"star_label\" for=\"star" +
                 (book.id * 10 + i) + "\"></label>";
 
@@ -64,7 +64,7 @@ let BooksView = (function (controller, model, notificationsView) {
             "<optgroup label=\"None of above\">" +
             "<option value=\"Not selected\" selected>Not selected</option>" +
             "</select><br>Or type your tag <input type=\"text\" />" +
-            "<br><button onclick=\"BooksView.addBookTag(" + book.id + ")\">" +
+            "<br><button onclick=\"booksView.addBookTag(" + book.id + ")\">" +
             "Confirm</button></p></div><div class=\"modal-footer\">" +
             "<button type=\"button\" class=\"btn btn-primary\" " +
             "data-dismiss=\"modal\">Закрыть</button></div></div>";
@@ -92,12 +92,17 @@ let BooksView = (function (controller, model, notificationsView) {
     function addBook() {
         let title = window.document.querySelector("#add_book_title").value;
         let author = window.document.querySelector("#add_book_author").value;
-        let bookImage = window.document.querySelector("#add_book_image").value;
+        let bookImage = window.document.querySelector("#add_book_image").files[0];
+
+
+        let reader = new FileReader();
+        let imageURL = reader.readAsDataURL(bookImage).result;
+
 
         if (title.trim() !== "" || author.trim() !== "") {
             controller.addBook(title, author, bookImage);
 
-            alert("Book \"" + author + " - " + title + "\" has been added!");
+            alert("book \"" + author + " - " + title + "\" has been added!");
 
             window.document.querySelector("#add_image_label").style = "";
             window.document.querySelector("#loaded_image").style = "";
@@ -123,6 +128,35 @@ let BooksView = (function (controller, model, notificationsView) {
     }
 
 
+    function showLoadedImage() {
+        window.document.querySelector(".upload_button").style = "background-color: #16A3F9";
+        /*let bookImage = window.document.querySelector("#add_book_image").value;
+        bookImage = bookImage.substring(12);
+        bookImage = "Images/" + bookImage;
+        window.document.querySelector("#loaded_image").style = "background-image: url(\"" +
+            bookImage + "\"); display: block;";*/
+
+        let input = window.document.querySelector("#add_book_image");
+
+
+        var reader = new FileReader();
+        let bookImage;
+
+
+        reader.onload = function (e) {
+            bookImage = e.target.result;
+            window.document.querySelector("#loaded_image").style = "background: url(\"" +
+                bookImage + "\") no-repeat;  background-size: contain; display: block; ";
+            window.document.querySelector("#loaded_image").setAttribute('url',bookImage);
+        };
+
+
+        reader.readAsDataURL(input.files[0]);
+
+
+    }
+
+
     function addBookTag(bookId) {
         let tagSelect =
             window.document.querySelector("#modal" + bookId + " select").value;
@@ -144,16 +178,6 @@ let BooksView = (function (controller, model, notificationsView) {
         controller.addBookTag(bookId, newTag);
 
         fillModal(bookId);
-    }
-
-
-    function showLoadedImage() {
-        window.document.querySelector(".upload_button").style = "background-color: #16A3F9";
-        let bookImage = window.document.querySelector("#add_book_image").value;
-        bookImage = bookImage.substring(12);
-        bookImage = "Images/" + bookImage;
-        window.document.querySelector("#loaded_image").style = "background-image: url(\"" +
-            bookImage + "\"); display: block;";
     }
 
 
@@ -236,10 +260,9 @@ let BooksView = (function (controller, model, notificationsView) {
     window.document.querySelector("#search").addEventListener("input", function () {
         filter(search);
     });
-
     return {
         browsePage,
         addBookTag,
         updateRating
     };
-}(BooksController, BooksModel, NotificationsView));
+}(booksController, booksModel, notificationsView));

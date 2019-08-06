@@ -1,4 +1,4 @@
-let Book = (function () {
+let book = (function () {
     "use strict";
 
     function Book(id, title, author, image, rating, tags) {

@@ -1,4 +1,4 @@
-let Notification = (function () {
+let notification = (function () {
     "use strict";
 
     function Notification(id, text, date) {

@@ -1,10 +1,10 @@
-let Main = (function (BooksView, NotificationView) {
+(function (booksView, notificationView) {
     "use strict";
 
     (function pageLoad() {
-        BooksView.browsePage();
-        NotificationView.loadHistoryBar();
+        booksView.browsePage();
+        notificationView.loadHistoryBar();
     })();
 
 
-}(BooksView, NotificationsView));
+}(booksView, notificationsView));
