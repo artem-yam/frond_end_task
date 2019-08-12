@@ -1,14 +1,12 @@
-let book = (function () {
-    "use strict";
+function Book(id, title, author, image, rating, tags) {
+    const DEFAULT_IMAGE = "images/noCover.jpg";
+    const DEFAULT_RATING = 0;
 
-    function Book(id, title, author, image, rating, tags) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.image = image || "noCover.jpg";
-        this.rating = rating || 0;
-        this.tags = tags || [];
-    }
+    this.id = id;
+    this.title = title;
+    this.author = author;
+    this.image = image || DEFAULT_IMAGE;
+    this.rating = rating || DEFAULT_RATING;
+    this.tags = tags || [];
+}
 
-    return Book;
-}());

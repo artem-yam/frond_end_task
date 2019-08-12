@@ -1,13 +1,10 @@
-let notification = (function () {
-    "use strict";
+function Notification(id, text, type, date) {
+    const DEFAULT_DATE = new Date();
 
-    function Notification(id, text, date) {
-        this.id = id;
-        this.text = text;
+    this.id = id;
+    this.text = text;
+    this.type = type;
 
-        this.date = date || new Date();
-    }
-
-    return Notification;
-}());
+    this.date = date || DEFAULT_DATE;
+}
 

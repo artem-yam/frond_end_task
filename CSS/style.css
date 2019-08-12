@@ -134,8 +134,12 @@ a {
     width: 100px;
     height: 150px;
     margin: 10px 60px;
-    display: none;
     background-size: cover;
+}
+
+#loaded_image img {
+    height: 150px;
+    width: 100px;
 }
 
 .menu #add_book {
@@ -322,10 +326,6 @@ a {
     border-radius: 15px;
 }
 
-.main_sort .sort a {
-    color: inherit;
-}
-
 .main_sort .keywords {
     margin-right: 20px;
 }
@@ -451,6 +451,7 @@ a {
     text-align: justify;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-start;
 }
 
@@ -503,4 +504,31 @@ a {
     height: 18px;
     margin-left: 22px;
     margin-top: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.block {
+    display: block;
+}
+
+.loadedImage {
+    background-color: #16A3F9;
+}
+
+.category_link {
+    padding: 3px 10px 2px 10px;
+    border-radius: 15px;
+    height: 20px;
+}
+
+.main_sort .active {
+    color: white;
+    background-color: #95b6d5;
 }
