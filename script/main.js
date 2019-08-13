@@ -1,24 +1,20 @@
-let Main = (function () {
+(function () {
     "use strict";
 
     function pageLoad() {
         let notificationsModel = new NotificationsModel(
             new NotificationsStorage());
-        let notificationsController = new NotificationsController(
-            notificationsModel);
-        let notificationsView = new NotificationsView(notificationsController,
-            notificationsModel);
-
         let booksModel = new BooksModel(new BooksStorage(),
             new AvailableTags());
-        let booksController = new BooksController(booksModel);
-        let booksView = new BooksView(booksController, booksModel,
-            notificationsView);
+
+        let controller = new Controller(booksModel, notificationsModel);
+
+        let notificationsView = new NotificationsView(controller,
+            notificationsModel);
+        let booksView = new BooksView(controller, booksModel);
 
         booksView.browsePage();
         notificationsView.loadHistoryBar();
-
-        return booksView;
     }
 
     window.addEventListener("load", pageLoad);

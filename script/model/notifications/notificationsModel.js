@@ -30,7 +30,7 @@ function NotificationsModel(storage) {
     }
 
     function getNextId() {
-        return ++notificationStorage.length;
+        return notificationStorage.length + 1;
     }
 
     return {

@@ -103,37 +103,40 @@
     </aside>
 
     <main class="main">
-        <div class="main_header">
-            Browse Available Books
-        </div>
-        <div class="main_sort">
-            <div class="sort">
-                <div>
-                    <a id="all_books" class="category_link" href="#">All
-                        Books</a>
+        <div>
+            <div class="main_header">
+                Browse Available Books
+            </div>
+            <div class="main_sort">
+                <div class="sort">
+                    <div>
+                        <a id="all_books" class="category_link" href="#">All
+                            Books</a>
+                    </div>
+                    <div>
+                        <a id="most_recent" class="category_link" href="#">Most
+                            Recent</a>
+                    </div>
+                    <div>
+                        <a id="most_popular" class="category_link" href="#">Most
+                            Popular</a>
+                    </div>
+                    <div>
+                        <a id="free_books" class="category_link" href="#">Free
+                            Books</a>
+                    </div>
                 </div>
-                <div>
-                    <a id="most_recent" class="category_link" href="#">Most
-                        Recent</a>
-                </div>
-                <div>
-                    <a id="most_popular" class="category_link" href="#">Most
-                        Popular</a>
-                </div>
-                <div>
-                    <a id="free_books" class="category_link" href="#">Free
-                        Books</a>
+                <div class="keywords">
+                    <input id="search" type="search"
+                           placeholder="Enter Keywords"/>
+                    <input type="image" alt="Search"
+                           src="images/icons/search.png">
                 </div>
             </div>
-            <div class="keywords">
-                <input id="search" type="search"
-                       placeholder="Enter Keywords"/>
-                <input type="image" alt="Search"
-                       src="images/icons/search.png">
-            </div>
+
+            <div class="main_content"></div>
         </div>
 
-        <div class="main_content"></div>
         <div class="history_content"></div>
     </main>
 
@@ -255,9 +258,7 @@
 
     <!--Контроллеры-->
     <script type="text/javascript"
-            src="script/controllers/notificationsController.js"></script>
-    <script type="text/javascript"
-            src="script/controllers/booksController.js"></script>
+            src="script/controller/controller.js"></script>
 
     <!--Вьюхи-->
     <script type="text/javascript"

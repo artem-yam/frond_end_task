@@ -96,11 +96,10 @@ function NotificationsView(controller, model) {
         window.document.querySelector(".nav_menu .history").classList
             .add("active");
 
-        for (let mainDiv of window.document.querySelectorAll(
-            ".main > div:not(:last-of-type)")) {
-            mainDiv.classList.remove("flex");
-            mainDiv.classList.add("hidden");
-        }
+        window.document.querySelector(
+            ".main > div").classList.remove("block");
+        window.document.querySelector(
+            ".main > div").classList.add("hidden");
 
         let template = window.document.querySelector("#history_page_template");
         let historyPage = window.document.querySelector(".history_content");

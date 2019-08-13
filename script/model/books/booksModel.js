@@ -29,14 +29,10 @@ function BooksModel(storage, tags) {
     }
 
     function checkWithFilter(book, filter) {
-        let result = false;
+        let result = true;
 
         if (filter === MOST_POPULAR_FILTER) {
-            if (book.rating === MAX_RATING) {
-                result = true;
-            }
-        } else {
-            result = true;
+            result = (book.rating === MAX_RATING);
         }
 
         return result;
@@ -61,7 +57,7 @@ function BooksModel(storage, tags) {
     }
 
     function getNextId() {
-        return ++booksStorage.length;
+        return booksStorage.length + 1;
     }
 
     function addBookTag(bookId, newTag) {
@@ -69,10 +65,14 @@ function BooksModel(storage, tags) {
             let book = findBook(bookId);
             if (book && !book.tags.includes(newTag)) {
                 book.tags.push(newTag);
+
                 if (!availableTags.includes(newTag)) {
                     availableTags.push(newTag);
+                    onTagsChange.notify(book, true);
+                } else {
+                    onTagsChange.notify(book);
                 }
-                onTagsChange.notify(book);
+
             }
         }
     }

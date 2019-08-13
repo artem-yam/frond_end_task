@@ -1,9 +1,8 @@
-function BooksView(controller, model, notificationsView) {
+function BooksView(controller, model) {
     "use strict";
 
-    let booksController = controller;
+    let mainController = controller;
     let booksModel = model;
-    let relatedNotificationsView = notificationsView;
 
     function createBlock(book) {
         let template = window.document.querySelector("#book_template");
@@ -59,50 +58,31 @@ function BooksView(controller, model, notificationsView) {
         let modal = template.content.cloneNode(true);
 
         let emptyDiv = modal.querySelector("div").cloneNode(false);
-        emptyDiv.className = "";
+        emptyDiv.removeAttribute("class");
+
+        modal.querySelector(".modal-body hr").before(emptyDiv);
 
         modal.querySelector("div").setAttribute("id", "modal" + book.id);
 
         modal.querySelector(".modal-title").innerHTML =
             book.author + ": " + book.title;
 
-        let tagsCode = "";
+        modalContainer.appendChild(modal);
 
-        if (book.tags.length === 0) {
-            tagsCode += "Empty";
-        } else {
-            tagsCode += "<ul>";
-            for (let tag of book.tags) {
-                tagsCode += "<li>" + tag + "</li>";
-            }
-            tagsCode += "</ul>";
-        }
-        emptyDiv.innerHTML = tagsCode;
+        changeModalBody(book);
 
-        modal.querySelector(".modal-body hr").before(emptyDiv);
+        changeSelectTagList(book);
 
-        for (let tag of booksModel.tags) {
-            let tagOption = modal.querySelector("option").cloneNode(true);
-
-            tagOption.removeAttribute("selected");
-            tagOption.setAttribute("value", tag);
-            tagOption.innerHTML = tag;
-
-            modal.querySelector("optgroup").appendChild(tagOption);
-        }
-
-        modal.querySelector(".modal-body button")
+        window.document.querySelector("#modal" + bookId + " .modal-body button")
             .addEventListener('click', function () {
                 addBookTag(bookId);
             });
 
-        modalContainer.appendChild(modal);
     }
 
     function changeModalBody(book) {
-        let modal = window.document.querySelector(
-            "#modal" + book.id);
-        let modalBody = modal.querySelector(" .modal-body");
+        let modalBody = window.document.querySelector(
+            "#modal" + book.id + " .modal-body");
         let tagsDiv = modalBody.querySelector("div");
 
         let tagsCode = "";
@@ -117,7 +97,11 @@ function BooksView(controller, model, notificationsView) {
             tagsCode += "</ul>";
         }
         tagsDiv.innerHTML = tagsCode;
+    }
 
+    function changeSelectTagList(book) {
+        let modalBody = window.document.querySelector(
+            "#modal" + book.id + " .modal-body");
         Utils.resetInnerHTML(modalBody.querySelector("optgroup"));
 
         for (let tag of booksModel.tags) {
@@ -125,7 +109,7 @@ function BooksView(controller, model, notificationsView) {
 
             tagOption.removeAttribute("selected");
             tagOption.setAttribute("value", tag);
-            tagOption.innerHTML = tag;
+            tagOption.textContent = tag;
 
             modalBody.querySelector("optgroup").appendChild(tagOption);
         }
@@ -141,7 +125,7 @@ function BooksView(controller, model, notificationsView) {
     }
 
     function updateRating(bookId, newRating) {
-        booksController.updateRating(bookId, newRating);
+        mainController.updateRating(bookId, newRating);
     }
 
     function addBook() {
@@ -151,7 +135,7 @@ function BooksView(controller, model, notificationsView) {
             .getAttribute("src");
 
         if (title.trim() !== "" || author.trim() !== "") {
-            booksController.addBook(title, author, bookImage);
+            mainController.addBook(title, author, bookImage);
 
         } else {
             alert("Fill \"Title\" and \"Author\" fields to add a new book");
@@ -197,7 +181,7 @@ function BooksView(controller, model, notificationsView) {
             newTag = tagSelect;
         }
 
-        booksController.addBookTag(bookId, newTag);
+        mainController.addBookTag(bookId, newTag);
     }
 
     function chooseCategory(category) {
@@ -246,11 +230,12 @@ function BooksView(controller, model, notificationsView) {
         }
         window.document.querySelector(".nav_menu .browse").classList
             .add("active");
-        for (let mainDiv of window.document
-            .querySelectorAll(".main > div:not(:last-of-type)")) {
-            mainDiv.classList.remove("hidden");
-            mainDiv.classList.add("flex");
-        }
+
+        window.document.querySelector(
+            ".main > div").classList.remove("hidden");
+        window.document.querySelector(
+            ".main > div").classList.add("block");
+
         Utils.resetInnerHTML(window.document.querySelector(".history_content"));
 
         showAllBooks();
@@ -298,13 +283,13 @@ function BooksView(controller, model, notificationsView) {
         Utils.resetValue(window.document.querySelector("#add_book_title"));
         Utils.resetValue(window.document.querySelector("#add_book_author"));
 
-        relatedNotificationsView.addNotification(
+        mainController.addNotification(
             [title, author, "Library"],
             notificationType.ADD_BOOK);
 
         if (window.document.querySelector(".history_content").innerHTML !==
             "") {
-            relatedNotificationsView.loadHistoryPage();
+            // relatedNotificationsView.loadHistoryPage();
         } else {
             let activeCategory = window.document.querySelector(
                 ".main_sort .sort .active");
@@ -316,13 +301,19 @@ function BooksView(controller, model, notificationsView) {
     });
 
     model.onRatingChange.subscribe(function (updatedBook) {
-        relatedNotificationsView.addNotification(
+        mainController.addNotification(
             [updatedBook.title, updatedBook.author, updatedBook.rating],
             notificationType.RATING);
     });
 
-    model.onTagsChange.subscribe(function (updatedBook) {
+    model.onTagsChange.subscribe(function (updatedBook, userTagPushed) {
         changeModalBody(updatedBook);
+
+        if (userTagPushed === true) {
+            for (let book of booksModel.storage) {
+                changeSelectTagList(book);
+            }
+        }
     });
 
     return {
