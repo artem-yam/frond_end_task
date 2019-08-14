@@ -289,7 +289,7 @@ a {
     color: #656974;
 }
 
-.main > div > div {
+.main .browse > div {
     padding-left: 20px;
     background-color: #eef1f8;
     border-bottom: 2px solid #e4e7ee;

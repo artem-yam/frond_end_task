@@ -97,9 +97,9 @@ function NotificationsView(controller, model) {
             .add("active");
 
         window.document.querySelector(
-            ".main > div").classList.remove("block");
+            ".main .browse").classList.remove("block");
         window.document.querySelector(
-            ".main > div").classList.add("hidden");
+            ".main .browse").classList.add("hidden");
 
         let template = window.document.querySelector("#history_page_template");
         let historyPage = window.document.querySelector(".history_content");
