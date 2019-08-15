@@ -16,9 +16,9 @@ function NotificationsView(controller, model) {
         historyBlock.querySelector("p").innerHTML =
             formNotificationMessage(notification);
         historyBlock.querySelector(".history_text").innerHTML +=
-            formTimeMessage(model.getFlowedTime(notification.date));
+            formTimeMessage(notificationsModel.getFlowedTime(notification.date));
 
-        historyBar.prepend(historyBlock);
+        historyBar.append(historyBlock);
     }
 
     function formNotificationMessage(notification) {
@@ -27,28 +27,26 @@ function NotificationsView(controller, model) {
         switch (notification.type) {
             case 'ADD_BOOK':
                 message += "You added <b>" +
-                    notification.text[0] + "</b> by <b>" +
-                    notification.text[1] + "</b>";
+                    notification.book.title + "</b> by <b>" +
+                    notification.book.author + "</b>";
 
-                if (notification.text.length > 2) {
-                    message += " to your <b>" + notification.text[2] + "</b>";
+                if (notification.category) {
+                    message += " to your <b>" + notification.category + "</b>";
                 }
                 break;
             case 'SEARCH':
                 message += "You searched <b>" +
-                    notification.text[0] + "</b> in <b>" +
-                    notification.text[1] + "</b>";
+                    notification.searchText + "</b>";
+                if (notification.category) {
+                    message += " in <b>" + notification.category + "</b>";
+                }
                 break;
             case 'RATING':
                 message += "You rated <b>" +
-                    notification.text[0] + "</b> by <b>" +
-                    notification.text[1] + "</b>" +
-                    " with " + notification.text[2] + " stars";
+                    notification.book.title + "</b> by <b>" +
+                    notification.book.author + "</b>" +
+                    " with " + notification.book.rating + " stars";
                 break;
-            default:
-                for (let string of notification.text) {
-                    message += string + " ";
-                }
         }
 
         return message;
@@ -75,15 +73,11 @@ function NotificationsView(controller, model) {
     }
 
     function loadHistoryBar() {
-        window.document.querySelector(".history_block").innerHTML = "";
-        let i = 0;
-        if (notificationsModel.storage.length > HISTORY_BAR_LENGTH) {
-            i = notificationsModel.storage.length - HISTORY_BAR_LENGTH;
-        }
+        Utils.resetInnerHTML(window.document.querySelector(".history_block"));
 
-        for (i; i < notificationsModel.storage.length; i++) {
-            let msg = notificationsModel.storage[i];
-            createHistoryBarBlock(msg);
+        for (let i = notificationsModel.storage.length - 1;
+             i > notificationsModel.storage.length - HISTORY_BAR_LENGTH - 1 && i >= 0; i--) {
+            createHistoryBarBlock(notificationsModel.storage[i]);
         }
     }
 
@@ -101,39 +95,30 @@ function NotificationsView(controller, model) {
         window.document.querySelector(
             ".main .browse").classList.add("hidden");
 
-        let template = window.document.querySelector("#history_page_template");
-        let historyPage = window.document.querySelector(".history_content");
-
-        for (let i = 0; i < notificationsModel.storage.length; i++) {
-
-            let historyBlock = template.content.cloneNode(true);
-
-            historyBlock.querySelector("p").innerHTML =
-                formNotificationMessage(notificationsModel.storage[i]);
-
-            let date = notificationsModel.storage[i].date;
-            let dateString = date.getFullYear() + "." + (date.getMonth() + 1) +
-                "." + date.getDate() + " " + date.getHours() + ":" +
-                date.getMinutes() +
-                ":" + date.getSeconds();
-
-            historyBlock.querySelector(".history_log").innerHTML +=
-                dateString;
-
-            historyPage.appendChild(historyBlock);
+        for (let notification of notificationsModel.storage) {
+            createHistoryPageBlock(notification);
         }
     }
 
-    function addSearchNotification() {
-        let searchText = window.document.querySelector("#search").value;
-        let activeCategory = window.document.querySelector(
-            ".main_sort .sort .active");
-        addNotification([searchText, activeCategory.innerHTML],
-            notificationType.SEARCH);
-    }
+    function createHistoryPageBlock(notification) {
+        let template = window.document.querySelector("#history_page_template");
+        let historyPage = window.document.querySelector(".history_content");
 
-    function addNotification(text, type) {
-        notificationsController.addNotification(text, type);
+        let historyBlock = template.content.cloneNode(true);
+
+        historyBlock.querySelector("p").innerHTML =
+            formNotificationMessage(notification);
+
+        let date = notification.date;
+        let dateString = date.getFullYear() + "." + (date.getMonth() + 1) +
+            "." + date.getDate() + " " + date.getHours() + ":" +
+            date.getMinutes() +
+            ":" + date.getSeconds();
+
+        historyBlock.querySelector(".history_log").innerHTML +=
+            dateString;
+
+        historyPage.appendChild(historyBlock);
     }
 
     window.document.querySelector(".nav_menu .history")
@@ -143,14 +128,21 @@ function NotificationsView(controller, model) {
 
     window.document.querySelector("#search")
         .addEventListener("input", function () {
-            addSearchNotification();
+            let searchText = window.document.querySelector("#search").value;
+            let activeCategory = window.document.querySelector(
+                ".main_sort .sort .active");
+            notificationsController.addSearchNotification(searchText, activeCategory.innerHTML);
         });
 
-    model.onNotificationAdd.subscribe(loadHistoryBar);
+    model.onNotificationAdd.subscribe(function () {
+        loadHistoryBar();
+
+        if (window.document.querySelector(".history_content").innerHTML !== "") {
+            loadHistoryPage();
+        }
+    });
 
     return {
-        loadHistoryBar,
-        loadHistoryPage,
-        addNotification
+        loadHistoryBar
     };
 }

@@ -46,11 +46,10 @@ function BooksView(controller, model) {
                 "_" + book.rating).setAttribute("checked", "");
         }
 
-        fillModal(book.id);
+        fillModal(book);
     }
 
-    function fillModal(bookId) {
-        let book = booksModel.findBook(bookId);
+    function fillModal(book) {
 
         let template = window.document.querySelector("#modal_template");
         let modalContainer = window.document.querySelector(".modal_container");
@@ -73,9 +72,9 @@ function BooksView(controller, model) {
 
         changeSelectTagList(book);
 
-        window.document.querySelector("#modal" + bookId + " .modal-body button")
+        window.document.querySelector("#modal" + book.id + " .modal-body button")
             .addEventListener('click', function () {
-                addBookTag(bookId);
+                addBookTag(book.id);
             });
 
     }
@@ -134,7 +133,7 @@ function BooksView(controller, model) {
         let bookImage = window.document.querySelector("#loaded_image img")
             .getAttribute("src");
 
-        if (title.trim() !== "" || author.trim() !== "") {
+        if (!Utils.isEmpty(title) || !Utils.isEmpty(author)) {
             mainController.addBook(title, author, bookImage);
 
         } else {
@@ -169,7 +168,7 @@ function BooksView(controller, model) {
         let newTag = "";
 
         if (tagSelect === "Not selected") {
-            if (tagInput.trim() !== "") {
+            if (!Utils.isEmpty(tagInput)) {
                 Utils.resetValue(window.document.querySelector(
                     "#modal" + bookId + " .modal-body input"));
                 newTag = tagInput;
@@ -283,14 +282,7 @@ function BooksView(controller, model) {
         Utils.resetValue(window.document.querySelector("#add_book_title"));
         Utils.resetValue(window.document.querySelector("#add_book_author"));
 
-        mainController.addNotification(
-            [title, author, "Library"],
-            notificationType.ADD_BOOK);
-
-        if (window.document.querySelector(".history_content").innerHTML !==
-            "") {
-            // relatedNotificationsView.loadHistoryPage();
-        } else {
+        if (Utils.isEmpty(window.document.querySelector(".history_content").innerHTML)) {
             let activeCategory = window.document.querySelector(
                 ".main_sort .sort .active");
             if (window.document.getElementById("all_books") ===
@@ -298,12 +290,6 @@ function BooksView(controller, model) {
                 showAllBooks();
             }
         }
-    });
-
-    model.onRatingChange.subscribe(function (updatedBook) {
-        mainController.addNotification(
-            [updatedBook.title, updatedBook.author, updatedBook.rating],
-            notificationType.RATING);
     });
 
     model.onTagsChange.subscribe(function (updatedBook, userTagPushed) {

@@ -12,9 +12,14 @@ let Utils = function () {
         setElementProperty(element, "value", "");
     }
 
+    function isEmpty(string) {
+        return string.toString().trim() === "";
+    }
+
     return {
         resetInnerHTML,
         resetValue,
+        isEmpty
     }
 
 }();

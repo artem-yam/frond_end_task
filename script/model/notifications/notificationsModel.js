@@ -1,6 +1,8 @@
 function NotificationsModel(storage) {
     "use strict";
 
+    const NEW_BOOK_CATEGORY = "Library";
+
     let notificationStorage = storage;
     let onNotificationAdd = new EventEmitter();
 
@@ -23,10 +25,23 @@ function NotificationsModel(storage) {
         }
     }
 
-    function addNotification(text, type) {
-        let newNotify = new Notification(getNextId(), text, type);
+    function addNotification(book, searchText, category, type) {
+        let newNotify = new NotificationTO(getNextId(), Object.assign(new Book, book), searchText, category, type);
+
         notificationStorage.push(newNotify);
         onNotificationAdd.notify();
+    }
+
+    function addSearchNotification(searchText, searchCategory) {
+        addNotification(null, searchText, searchCategory, notificationType.SEARCH);
+    }
+
+    function addNewRatingNotification(book) {
+        addNotification(book, null, null, notificationType.RATING);
+    }
+
+    function addNewBookNotification(book) {
+        addNotification(book, null, NEW_BOOK_CATEGORY, notificationType.ADD_BOOK);
     }
 
     function getNextId() {
@@ -35,8 +50,10 @@ function NotificationsModel(storage) {
 
     return {
         getFlowedTime,
-        addNotification,
         storage: notificationStorage,
-        onNotificationAdd
+        onNotificationAdd,
+        addSearchNotification,
+        addNewRatingNotification,
+        addNewBookNotification
     }
 }

@@ -8,7 +8,6 @@ function BooksModel(storage, tags) {
     let booksStorage = storage;
     let availableTags = tags;
     let onBookAdd = new EventEmitter();
-    let onRatingChange = new EventEmitter();
     let onTagsChange = new EventEmitter();
 
     function search(text, filter) {
@@ -17,10 +16,8 @@ function BooksModel(storage, tags) {
         for (let i = 0; i < booksStorage.length; i++) {
             let book = booksStorage[i];
             if (checkWithFilter(book, filter) &&
-                (book.title.toLowerCase()
-                        .indexOf(text.toLowerCase()) !== TEXT_NOT_FOUND ||
-                    book.author.toLowerCase()
-                        .indexOf(text.toLowerCase()) !== TEXT_NOT_FOUND)) {
+                substringSearch(book.title, text) ||
+                substringSearch(book.author, text)) {
                 result.push(book);
             }
         }
@@ -28,11 +25,18 @@ function BooksModel(storage, tags) {
         return result;
     }
 
+    function substringSearch(string, substring) {
+        return string.toString().toLowerCase()
+            .indexOf(substring.toLowerCase()) !== TEXT_NOT_FOUND;
+    }
+
     function checkWithFilter(book, filter) {
         let result = true;
 
-        if (filter === MOST_POPULAR_FILTER) {
-            result = (book.rating === MAX_RATING);
+        switch (filter) {
+            case (MOST_POPULAR_FILTER):
+                result = (book.rating === MAX_RATING);
+                break;
         }
 
         return result;
@@ -46,7 +50,6 @@ function BooksModel(storage, tags) {
         let bookToUpdate = findBook(bookId);
 
         bookToUpdate.rating = newRating;
-        onRatingChange.notify(bookToUpdate);
     }
 
     function addBook(title, author, bookImage) {
@@ -54,6 +57,8 @@ function BooksModel(storage, tags) {
 
         booksStorage.push(newBook);
         onBookAdd.notify(title, author);
+
+        return newBook;
     }
 
     function getNextId() {
@@ -61,30 +66,46 @@ function BooksModel(storage, tags) {
     }
 
     function addBookTag(bookId, newTag) {
-        if (newTag.trim() !== "") {
+        if (!Utils.isEmpty(newTag)) {
             let book = findBook(bookId);
-            if (book && !book.tags.includes(newTag)) {
+            if (book && !hasTag(book, newTag)) {
                 book.tags.push(newTag);
 
-                if (!availableTags.includes(newTag)) {
-                    availableTags.push(newTag);
-                    onTagsChange.notify(book, true);
-                } else {
-                    onTagsChange.notify(book);
-                }
-
+                onTagsChange.notify(book, addNewTagToTheList(newTag));
             }
         }
     }
 
+    function hasTag(book, tag) {
+        let hasTag = false;
+
+        for (let i = 0; i < book.tags.length && !hasTag; i++) {
+            hasTag = (book.tags[i].toLowerCase() === tag.toLowerCase());
+        }
+
+        return hasTag;
+    }
+
+    function addNewTagToTheList(newTag) {
+        let isAdded = false;
+
+        if (!availableTags.includes(newTag)) {
+            availableTags.push(newTag);
+            isAdded = true;
+        }
+
+        return isAdded;
+    }
+
     function findBook(bookId) {
-        let result;
-        for (let i = 0; i < booksStorage.length, result === undefined; i++) {
+        let foundBook;
+
+        for (let i = 0; i < booksStorage.length && foundBook === undefined; i++) {
             if (booksStorage[i].id === bookId) {
-                result = booksStorage[i];
+                foundBook = booksStorage[i];
             }
         }
-        return result;
+        return foundBook;
     }
 
     return {
@@ -97,7 +118,6 @@ function BooksModel(storage, tags) {
         storage: booksStorage,
         tags: availableTags,
         onBookAdd,
-        onRatingChange,
         onTagsChange
     }
 }
